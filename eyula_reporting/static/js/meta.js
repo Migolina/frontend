@@ -60,10 +60,10 @@ $(document).ready(function () {
 
     function getData(user_id,date_start, date_stop, account_select, level_select, get_account = false) {
         const level = level_select.val();
+
         if (get_account){
             getAccounts(user_id,level);
         }; 
-        
         const account_id = account_select.val();
         let datas = [];
         var params = {
@@ -122,25 +122,37 @@ $(document).ready(function () {
         return datas;
     };
 
-    $(function() {
-        $('input[name="daterange"]').daterangepicker({
-            opens: 'left'
-        }, function(start, end, label) {
-            console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
-        });
-    });
+
 
     const userId = 1
     const accountSelect = $('#account_id');
     const levelSelect = $('#level');
-    const today = new Date("2023-03-01");
+    
+    const today = new Date('2023-03-01');
     const oneWeekAgo = new Date();
     oneWeekAgo.setTime(today.getTime() - (7 * 24 * 60 * 60 * 1000));
-    //const bearer_token = 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiMSIsImV4cCI6MTY3OTY1NTAzM30._gpQNb9baxo41NUQK-mRQ9w0h8XkQWmcfRaBZTPHGH0'
 
     const dateStop = today.toISOString().substring(0, 10);
     const dateStart = oneWeekAgo.toISOString().substring(0, 10);
 
+    $(function () {
+        $('input[name="daterange"]').daterangepicker({
+            opens: 'left',
+            startDate: oneWeekAgo,
+            endDate: today
+        },
+            function (start, end, label) {
+                console.log("A new date selection was made: " + start.toISOString().substring(0, 10) + ' to ' + end.toISOString().substring(0, 10));
+                getData(user_id = userId,
+                    date_start = start.toISOString().substring(0, 10),
+                    date_stop = end.toISOString().substring(0, 10),
+                    account_select = accountSelect,
+                    level_select = levelSelect,
+                    get_account = true
+                );
+            }
+        );
+    });
 
     // default executed when page loads
     getData(user_id = userId,
@@ -255,8 +267,6 @@ $(document).ready(function () {
         }, 1000);
 
     });
-
-
 
 });
 
