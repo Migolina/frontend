@@ -122,6 +122,14 @@ $(document).ready(function () {
         return datas;
     };
 
+    $(function() {
+        $('input[name="daterange"]').daterangepicker({
+            opens: 'left'
+        }, function(start, end, label) {
+            console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+        });
+    });
+
     const userId = 1
     const accountSelect = $('#account_id');
     const levelSelect = $('#level');

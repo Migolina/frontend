@@ -100,7 +100,7 @@
                 <div class="col-3">
                     <form class="form-inline">
                         <div class="form-group">
-                            <input type="text" name="daterange" value="01/01/2018 - 01/15/2018" />
+                            <input type="text" name="daterange" class="form-control" value="01/01/2018 - 01/15/2018" />
                         </div>
                     </form>
                 </div>
@@ -388,13 +388,7 @@
     <script src="../static/adminkit/dist/js/app.js"></script>
     <script src="../static/js/meta.js"></script>
     <script>
-        $(function() {
-            $('input[name="daterange"]').daterangepicker({
-                opens: 'left'
-            }, function(start, end, label) {
-                console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
-            });
-        });
+
     </script>
 
 
