@@ -64,7 +64,9 @@ $(document).ready(function () {
         if (get_account){
             getAccounts(user_id,level);
         }; 
+
         const account_id = account_select.val();
+
         let datas = [];
         var params = {
             "date_start": date_start,
@@ -115,10 +117,14 @@ $(document).ready(function () {
                 $('#ctr').text(firstObj.ctr);
 
                 drawChart(firstObj);
+
+                console.log(data);
+
             }
         }).fail(function (resp) {
             console.log(resp);
         });
+
         return datas;
     };
 
@@ -132,8 +138,8 @@ $(document).ready(function () {
     const oneWeekAgo = new Date();
     oneWeekAgo.setTime(today.getTime() - (7 * 24 * 60 * 60 * 1000));
 
-    const dateStop = today.toISOString().substring(0, 10);
-    const dateStart = oneWeekAgo.toISOString().substring(0, 10);
+    var dateStop = today.toISOString().substring(0, 10);
+    var dateStart = oneWeekAgo.toISOString().substring(0, 10);
 
     $(function () {
         $('input[name="daterange"]').daterangepicker({
@@ -146,14 +152,21 @@ $(document).ready(function () {
             } 
         },
             function (start, end, label) {
-                console.log("A new date selection was made: " + start.toISOString().substring(0, 10) + ' to ' + end.toISOString().substring(0, 10));
+                $('section.loading').show();
+                dateStart = start.toISOString().substring(0, 10);
+                dateStop = end.toISOString().substring(0, 10);
+
                 getData(user_id = userId,
-                    date_start = start.toISOString().substring(0, 10),
-                    date_stop = end.toISOString().substring(0, 10),
+                    date_start = dateStart,
+                    date_stop = dateStop,
                     account_select = accountSelect,
-                    level_select = levelSelect,
-                    get_account = true
+                    level_select = levelSelect
                 );
+
+            setTimeout(function () {
+                $('section.loading').hide();
+            }, 1000);
+
             }
         );
     });
@@ -191,6 +204,9 @@ $(document).ready(function () {
         $('section.loading').show();
         $('#select-level-row').remove();
 
+        console.log(dateStart);
+        console.log(dateStop);
+
         data = getData(user_id = userId,
             date_start = dateStart,
             date_stop = dateStop,
@@ -220,7 +236,6 @@ $(document).ready(function () {
                 levelName = level + '_name'
                 levelId = level + '_id'
                 data.forEach(element => {
-                    console.log(element[levelId]);
                     var optStr = `<option>${element[levelName]}</option>`
                     var opt = $(optStr);
                     opt.val(element[levelId]);
@@ -234,7 +249,7 @@ $(document).ready(function () {
     });
 
 
-    $('body').on('change','#select-level',function(e){
+    $('body').on('change','#select-level', function(e){
         $('section.loading').show();
         var account_id = accountSelect.val();
         var level = levelSelect.val();
