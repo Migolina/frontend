@@ -1,0 +1,21 @@
+
+.form-group1 {
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+    align-items: left;    
+}
+
+.form-group1 input {
+    width: 225px;
+    height: 32px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: center;
+    font-size: 16px;
+    margin-left: 5px;
+}
+.form-group1 label {
+    margin-left: 5px;
+}

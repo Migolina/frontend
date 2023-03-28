@@ -34,7 +34,7 @@ $(document).ready(function () {
                 'levelType': level
             }),
             headers: {
-                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiMSIsImV4cCI6MTY3OTczNTI1MH0.YCijsJ1y_MBlRSJJJGAEu0ahJ19S6aJDGtbpqEX-l_A',
+                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiMSIsImV4cCI6MTY4MDA3MzUyMn0.anyjV4xiXLerGHFAsEIWbCYeNHV_PE4ayYTxSPVLpX4',
                 'Content-Type':'application/json'
             },
             dataType: 'json',
@@ -96,7 +96,7 @@ $(document).ready(function () {
             type: 'POST',
             data: JSON.stringify(params),
             headers: {
-                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiMSIsImV4cCI6MTY3OTczNTI1MH0.YCijsJ1y_MBlRSJJJGAEu0ahJ19S6aJDGtbpqEX-l_A',
+                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiMSIsImV4cCI6MTY4MDA3MzUyMn0.anyjV4xiXLerGHFAsEIWbCYeNHV_PE4ayYTxSPVLpX4',
                 'Content-Type': 'application/json'
             },
             dataType: 'json',
@@ -139,7 +139,11 @@ $(document).ready(function () {
         $('input[name="daterange"]').daterangepicker({
             opens: 'left',
             startDate: oneWeekAgo,
-            endDate: today
+            endDate: today,
+            showDropdowns: false,
+            locale: {
+                format: 'DD/MM/YYYY'
+            } 
         },
             function (start, end, label) {
                 console.log("A new date selection was made: " + start.toISOString().substring(0, 10) + ' to ' + end.toISOString().substring(0, 10));
