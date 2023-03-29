@@ -321,7 +321,7 @@ $(document).ready(function () {
         $('#cr').text(foundObject['cr_' + params['actions'][0]]);
         $('#ctr').text(foundObject.ctr);
 
-        drawChart(foundObject,axis_select=axis);
+        drawChart(foundObject);
 
         setTimeout(function () {
             $('section.loading').hide();
