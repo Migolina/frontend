@@ -1,7 +1,7 @@
 $(document).ready(function () {
-    google.charts.load('current', { 'packages': ['corechart', 'line'] });
+    google.charts.load('current', { 'packages': ['corechart', 'line','geochart']});
 
-    function drawChart(data,series_field = 'total_spend') {
+    function drawLineChart(data,series_field = 'total_spend') {
         var dataTable = new google.visualization.DataTable();
         var words = series_field.split('_');
         var capitalizedWords = words.map(word => word.charAt(0).toUpperCase() + word.slice(1)); 
@@ -32,6 +32,21 @@ $(document).ready(function () {
         chart.draw(dataTable, options);
     };
 
+    function drawRegionsMap(data){
+        var dataTable = new google.visualization.DataTable();
+        dataTable.addColumn('string','Country');
+        dataTable.addColumn('number','Population');
+        dataTable.addRows(data);
+
+        var options = {};
+
+        var chart = new google.visualization.GeoChart(document.getElementById('regions_div'));
+
+        chart.draw(dataTable, options);
+
+    }
+
+
     function getAccounts(user_id,level){
         $.ajax({
             url: 'http://127.0.0.1:5555/meta/user-levels',
@@ -41,7 +56,7 @@ $(document).ready(function () {
                 'levelType': level
             }),
             headers: {
-                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiMSIsImV4cCI6MTY4MDE2MjU3NX0.ToafpkZw2WjF3XAlF1xMH8t1gk9N1qZMOweqzXQR_q8',
+                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiMSIsImV4cCI6MTY4MDE3NjYyOX0.Yezcp7NSgbbwPSEeYKlhBspI4h1MiELNwcySTHvs7w0',
                 'Content-Type':'application/json'
             },
             dataType: 'json',
@@ -107,7 +122,7 @@ $(document).ready(function () {
             type: 'POST',
             data: JSON.stringify(params),
             headers: {
-                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiMSIsImV4cCI6MTY4MDE2MjU3NX0.ToafpkZw2WjF3XAlF1xMH8t1gk9N1qZMOweqzXQR_q8',
+                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiMSIsImV4cCI6MTY4MDE3NjYyOX0.Yezcp7NSgbbwPSEeYKlhBspI4h1MiELNwcySTHvs7w0',
                 'Content-Type': 'application/json'
             },
             dataType: 'json',
@@ -141,7 +156,7 @@ $(document).ready(function () {
                     $('#cr').text(firstObj['cr_' + params['actions'][0]]);
                     $('#ctr').text(firstObj.ctr);
     
-                    drawChart(firstObj);
+                    drawLineChart(firstObj);
                 }
             }
         }).fail(function (resp) {
@@ -149,6 +164,52 @@ $(document).ready(function () {
         });
 
         return datas;
+    };
+
+    function getCountryData(date_start, date_stop, account_select, level_select){
+        const level = level_select.val();
+        const account_id = account_select.val();
+
+        var datas = [];
+        var params = {
+            "date_start": date_start,
+            "date_stop": date_stop,
+            "account_id": account_id,
+            "series": ["total_spend"],
+            "breakdowns": ['country'],
+            "level": level
+        };
+
+
+        $.ajax({
+            url: "http://127.0.0.1:5555/meta/report",
+            type: 'POST',
+            data: JSON.stringify(params),
+            headers: {
+                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiMSIsImV4cCI6MTY4MDE3NjYyOX0.Yezcp7NSgbbwPSEeYKlhBspI4h1MiELNwcySTHvs7w0',
+                'Content-Type': 'application/json'
+            },
+            dataType: 'json',
+            success: function(data){
+                firstObj = data[0].series;
+
+                var result = firstObj.reduce(function(accumulator, currentValue){
+                    if (typeof accumulator[currentValue.country] === 'undefined') {
+                        accumulator[currentValue.country] = 0;
+                      }
+                    accumulator[currentValue.country] += currentValue.total_spend;
+                    return accumulator;
+                },{})
+
+                result = Object.entries(result).map(([key, value]) => [key, value]);
+                console.log(result);
+
+                drawRegionsMap(data = result);
+                
+            }
+        }).fail(function(err){
+            console.log(err);
+        })        
     };
 
     const userId = 1
@@ -164,7 +225,6 @@ $(document).ready(function () {
     var dateStop = today.toISOString().substring(0, 10);
     var dateStart = oneWeekAgo.toISOString().substring(0, 10);
 
-    
     // default executed when page loads
     getData(user_id = userId,
         date_start = dateStart,
@@ -175,19 +235,10 @@ $(document).ready(function () {
         get_account = true
     );
 
-    /*
+    setTimeout(function(){
+        getCountryData(date_start = dateStart, date_stop=date_stop, account_select = accountSelect, level_select = levelSelect);
+    },1000);
 
-    const actionVal = actionsSelect.val();
-    const words = actionVal.split('_'); // Split the string into an array of words
-    const capitalizedWords = words.map(word => word.charAt(0).toUpperCase() + word.slice(1)); // Capitalize the first letter of each word
-    const actionText = capitalizedWords.join(' ');
-
-    var conversionOption = $('<option>');
-    conversionOption.val(actionVal);
-    conversionOption.text(actionText);
-    xAxisSelect.append(conversionOption);
-
-    */
 
 
     $(function () {
@@ -321,7 +372,7 @@ $(document).ready(function () {
         $('#cr').text(foundObject['cr_' + params['actions'][0]]);
         $('#ctr').text(foundObject.ctr);
 
-        drawChart(foundObject);
+        drawLineChart(foundObject);
 
         setTimeout(function () {
             $('section.loading').hide();
@@ -367,7 +418,7 @@ $(document).ready(function () {
             type: 'POST',
             data: JSON.stringify(params),
             headers: {
-                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiMSIsImV4cCI6MTY4MDE2MjU3NX0.ToafpkZw2WjF3XAlF1xMH8t1gk9N1qZMOweqzXQR_q8',
+                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiMSIsImV4cCI6MTY4MDE3NjYyOX0.Yezcp7NSgbbwPSEeYKlhBspI4h1MiELNwcySTHvs7w0',
                 'Content-Type': 'application/json'
             },
             dataType: 'json',
@@ -377,12 +428,12 @@ $(document).ready(function () {
                     let id = $('#select-level').val();
                     let foundObject = data.find(item => item[key] === id);
 
-                    drawChart(foundObject,series_field=series_field);
+                    drawLineChart(foundObject,series_field=series_field);
 
                 }else {
                     let firstObj = data[0];
 
-                    drawChart(firstObj,series_field=series_field);
+                    drawLineChart(firstObj,series_field=series_field);
 
                 }
             }
