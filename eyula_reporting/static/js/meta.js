@@ -41,7 +41,7 @@ $(document).ready(function () {
                 'levelType': level
             }),
             headers: {
-                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiMSIsImV4cCI6MTY4MDA4NjI1MX0.XeERv_fzmXxbJ834-UNkiP98zt_G5NNKdT1AYpQWl8Y',
+                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiMSIsImV4cCI6MTY4MDE2MjU3NX0.ToafpkZw2WjF3XAlF1xMH8t1gk9N1qZMOweqzXQR_q8',
                 'Content-Type':'application/json'
             },
             dataType: 'json',
@@ -107,7 +107,7 @@ $(document).ready(function () {
             type: 'POST',
             data: JSON.stringify(params),
             headers: {
-                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiMSIsImV4cCI6MTY4MDA4NjI1MX0.XeERv_fzmXxbJ834-UNkiP98zt_G5NNKdT1AYpQWl8Y',
+                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiMSIsImV4cCI6MTY4MDE2MjU3NX0.ToafpkZw2WjF3XAlF1xMH8t1gk9N1qZMOweqzXQR_q8',
                 'Content-Type': 'application/json'
             },
             dataType: 'json',
@@ -210,7 +210,7 @@ $(document).ready(function () {
                     date_stop = dateStop,
                     account_select = accountSelect,
                     level_select = levelSelect,
-                    actions_select = actionsSelect
+                    actions_select = actionsSelect,
                 );
 
             setTimeout(function () {
@@ -232,7 +232,7 @@ $(document).ready(function () {
             date_stop = dateStop,
             account_select = accountSelect,
             level_select = levelSelect,
-            actions_select = actionsSelect
+            actions_select = actionsSelect,
         );
 
         setTimeout(function () {
@@ -295,6 +295,7 @@ $(document).ready(function () {
         var account_id = accountSelect.val();
         var level = levelSelect.val();
         var action_type = actionsSelect.val();
+        var axis = xAxisSelect.val();
         key = level + '_id';
         id = e.target.value;
 
@@ -320,7 +321,7 @@ $(document).ready(function () {
         $('#cr').text(foundObject['cr_' + params['actions'][0]]);
         $('#ctr').text(foundObject.ctr);
 
-        drawChart(foundObject);
+        drawChart(foundObject,axis_select=axis);
 
         setTimeout(function () {
             $('section.loading').hide();
@@ -336,7 +337,8 @@ $(document).ready(function () {
             date_stop = dateStop,
             account_select = accountSelect,
             level_select = levelSelect,
-            actions_select = actionsSelect
+            actions_select = actionsSelect,
+            axis_select = xAxisSelect
         );
 
         setTimeout(function () {
@@ -365,7 +367,7 @@ $(document).ready(function () {
             type: 'POST',
             data: JSON.stringify(params),
             headers: {
-                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiMSIsImV4cCI6MTY4MDA4NjI1MX0.XeERv_fzmXxbJ834-UNkiP98zt_G5NNKdT1AYpQWl8Y',
+                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiMSIsImV4cCI6MTY4MDE2MjU3NX0.ToafpkZw2WjF3XAlF1xMH8t1gk9N1qZMOweqzXQR_q8',
                 'Content-Type': 'application/json'
             },
             dataType: 'json',
@@ -378,7 +380,10 @@ $(document).ready(function () {
                     drawChart(foundObject,series_field=series_field);
 
                 }else {
-                    console.log('none')
+                    let firstObj = data[0];
+
+                    drawChart(firstObj,series_field=series_field);
+
                 }
             }
         }).fail(function(err) {
