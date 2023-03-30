@@ -3,9 +3,10 @@ $(document).ready(function () {
 
     if (!token) {
       // Redirect the user to the login page
-      window.location.href = 'http://localhost:5555/login';
+      window.location.href = 'http://localhost:5000/login';
       return;
-      
+
+    } 
     google.charts.load('current', { 'packages': ['corechart', 'line','geochart']});
 
     function drawLineChart(data,series_field = 'total_spend') {
@@ -124,10 +125,7 @@ $(document).ready(function () {
                 "level": level
             };
         };
-
-        
-
-
+        */
         
         $.ajax({    
             url: "http://127.0.0.1:5555/meta/report",

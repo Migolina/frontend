@@ -24,7 +24,6 @@ document.getElementById('login-form').addEventListener('submit', async function(
             localStorage.setItem('token', data.token);
             window.location.href = 'http://localhost:5000/meta';
         } else {
-            
             errorMessageElement.innerText = 'Invalid username or password';
         }
     } catch (error) {
