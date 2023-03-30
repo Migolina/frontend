@@ -55,7 +55,7 @@ $(document).ready(function () {
                 'levelType': level
             }),
             headers: {
-                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiMSIsImV4cCI6MTY4MDE3NjYyOX0.Yezcp7NSgbbwPSEeYKlhBspI4h1MiELNwcySTHvs7w0',
+                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiMSIsImV4cCI6MTY4MDI2MzA1NX0.p2FSz7jlSfkboO8mLfvhfz442C-0peQoGlk6nRx0lQU',
                 'Content-Type':'application/json'
             },
             dataType: 'json',
@@ -120,7 +120,7 @@ $(document).ready(function () {
             type: 'POST',
             data: JSON.stringify(params),
             headers: {
-                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiMSIsImV4cCI6MTY4MDE3NjYyOX0.Yezcp7NSgbbwPSEeYKlhBspI4h1MiELNwcySTHvs7w0',
+                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiMSIsImV4cCI6MTY4MDI2MzA1NX0.p2FSz7jlSfkboO8mLfvhfz442C-0peQoGlk6nRx0lQU',
                 'Content-Type': 'application/json'
             },
             dataType: 'json',
@@ -164,7 +164,7 @@ $(document).ready(function () {
         return datas;
     };
 
-    function getCountryData(date_start, date_stop, account_select, level_select){
+    function getCountryData(date_start, date_stop, account_select,level_select,series='total_spend'){
         const level = level_select.val();
         const account_id = account_select.val();
 
@@ -173,7 +173,7 @@ $(document).ready(function () {
             "date_start": date_start,
             "date_stop": date_stop,
             "account_id": account_id,
-            "series": ["total_spend"],
+            "series": [series],
             "breakdowns": ['country'],
             "level": level
         };
@@ -183,14 +183,12 @@ $(document).ready(function () {
             type: 'POST',
             data: JSON.stringify(params),
             headers: {
-                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiMSIsImV4cCI6MTY4MDE3NjYyOX0.Yezcp7NSgbbwPSEeYKlhBspI4h1MiELNwcySTHvs7w0',
+                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiMSIsImV4cCI6MTY4MDI2MzA1NX0.p2FSz7jlSfkboO8mLfvhfz442C-0peQoGlk6nRx0lQU',
                 'Content-Type': 'application/json'
             },
             dataType: 'json',
             success: function(data){
-                console.log(data);
                 firstObj = data[0].series;
-
                 data.forEach(element => {
                     datas.push(element);
                 });
@@ -199,12 +197,11 @@ $(document).ready(function () {
                     if (typeof accumulator[currentValue.country] === 'undefined') {
                         accumulator[currentValue.country] = 0;
                       }
-                    accumulator[currentValue.country] += currentValue.total_spend;
+                    accumulator[currentValue.country] += currentValue[series];
                     return accumulator;
-                },{})
+                },{});
 
                 result = Object.entries(result).map(([key, value]) => [key, value]);
-                //console.log(result);
 
                 drawRegionsMap(data = result);
                 
@@ -221,6 +218,7 @@ $(document).ready(function () {
     const levelSelect = $('#level');
     const actionsSelect = $('#actions');
     const xAxisSelect = $('#x_axis');
+    const breakdownSelect = $('#breakdownSelect');
     
     const today = new Date('2023-03-01');
     const oneWeekAgo = new Date();
@@ -242,8 +240,6 @@ $(document).ready(function () {
     setTimeout(function(){
         getCountryData(date_start = dateStart, date_stop=date_stop, account_select = accountSelect, level_select = levelSelect);
     },1000);
-
-
 
     $(function () {
         $('input[name="daterange"]').daterangepicker({
@@ -294,7 +290,7 @@ $(document).ready(function () {
 
         setTimeout(function () {
             $('section.loading').hide();
-            getCountryData(date_start = dateStart, date_stop=date_stop, account_select = accountSelect, level_select = levelSelect);
+            getCountryData(date_start = dateStart, date_stop=date_stop, account_select = accountSelect, level_select = levelSelect,series='impressions');
         }, 1000);
 
     });
@@ -375,8 +371,8 @@ $(document).ready(function () {
         foundCountryObject = Object.entries(foundCountryObject).map(([key, value]) => [key, value]);
 
         var params = {
-            "date_start": date_start,
-            "date_stop": date_stop,
+            "date_start": dateStart,
+            "date_stop": dateStop,
             "account_id": account_id,
             "fields": ["impressions", "clicks", "total_spend", action_type],
             "series": ["total_spend"],
@@ -441,7 +437,7 @@ $(document).ready(function () {
             type: 'POST',
             data: JSON.stringify(params),
             headers: {
-                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiMSIsImV4cCI6MTY4MDE3NjYyOX0.Yezcp7NSgbbwPSEeYKlhBspI4h1MiELNwcySTHvs7w0',
+                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiMSIsImV4cCI6MTY4MDI2MzA1NX0.p2FSz7jlSfkboO8mLfvhfz442C-0peQoGlk6nRx0lQU',
                 'Content-Type': 'application/json'
             },
             dataType: 'json',
@@ -457,7 +453,6 @@ $(document).ready(function () {
                     let firstObj = data[0];
 
                     drawLineChart(firstObj,series_field=series_field);
-
                 }
             }
         }).fail(function(err) {
@@ -470,6 +465,78 @@ $(document).ready(function () {
 
     });
 
+    breakdownSelect.change(function(){
+        $('section.loading').show();
+        var accountId = accountSelect.val();
+        var breakdownVal = breakdownSelect.val();
+        var level = levelSelect.val();
+
+        var params = {
+            "date_start": dateStart,
+            "date_stop": dateStop,
+            "account_id": accountId,
+            "series": [breakdownVal],
+            "breakdowns": ['country'],
+            "level": level
+        };
+
+        console.log(params);
+
+        $.ajax({
+            url: "http://127.0.0.1:5555/meta/report",
+            type: 'POST',
+            data: JSON.stringify(params),
+            headers: {
+                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiMSIsImV4cCI6MTY4MDI2MzA1NX0.p2FSz7jlSfkboO8mLfvhfz442C-0peQoGlk6nRx0lQU',
+                'Content-Type': 'application/json'
+            },
+            dataType: 'json',
+            success: function(data){
+                if ($('#select-level').length){
+                    let key = level + '_id';
+                    let id = $('#select-level').val();
+                    
+                    var foundCountryObject = data.find(item => item[key] === id).series;
+            
+                    foundCountryObject = foundCountryObject.reduce(function(accumulator, currentValue){
+                        if (typeof accumulator[currentValue.country] === 'undefined') {
+                            accumulator[currentValue.country] = 0;
+                          }
+                        accumulator[currentValue.country] += currentValue[breakdownVal];
+                        return accumulator;
+                    },{});
+            
+                    foundCountryObject = Object.entries(foundCountryObject).map(([key, value]) => [key, value]);
+
+                    drawRegionsMap(data = foundCountryObject);
+
+                }else {
+                    let firstObj = data[0].series;
+
+                    var result = firstObj.reduce(function(accumulator, currentValue){
+                        if (typeof accumulator[currentValue.country] === 'undefined') {
+                            accumulator[currentValue.country] = 0;
+                          }
+                        accumulator[currentValue.country] += currentValue[breakdownVal];
+                        return accumulator;
+                    },{});
+    
+                    result = Object.entries(result).map(([key, value]) => [key, value]);
+    
+                    drawRegionsMap(data = result);
+
+                }
+
+            }
+        }).fail(function(err) {
+            console.log(err);
+        });
+
+        setTimeout(function () {
+            $('section.loading').hide();
+        }, 1000);
+
+    });
 
 });
 
