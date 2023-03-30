@@ -18,7 +18,6 @@ $(document).ready(function () {
             hAxis: {
                 title: 'Date'
             },
-
             vAxis: {
                 title: fieldText
             }
@@ -116,7 +115,6 @@ $(document).ready(function () {
         };
         */
         
-
         $.ajax({
             url: "http://127.0.0.1:5555/meta/report",
             type: 'POST',
@@ -180,7 +178,6 @@ $(document).ready(function () {
             "level": level
         };
 
-
         $.ajax({
             url: "http://127.0.0.1:5555/meta/report",
             type: 'POST',
@@ -191,7 +188,12 @@ $(document).ready(function () {
             },
             dataType: 'json',
             success: function(data){
+                console.log(data);
                 firstObj = data[0].series;
+
+                data.forEach(element => {
+                    datas.push(element);
+                });
 
                 var result = firstObj.reduce(function(accumulator, currentValue){
                     if (typeof accumulator[currentValue.country] === 'undefined') {
@@ -202,14 +204,16 @@ $(document).ready(function () {
                 },{})
 
                 result = Object.entries(result).map(([key, value]) => [key, value]);
-                console.log(result);
+                //console.log(result);
 
                 drawRegionsMap(data = result);
                 
             }
         }).fail(function(err){
             console.log(err);
-        })        
+        });
+        
+        return datas
     };
 
     const userId = 1
@@ -264,8 +268,10 @@ $(document).ready(function () {
                     actions_select = actionsSelect,
                 );
 
+            
             setTimeout(function () {
                 $('section.loading').hide();
+                getCountryData(date_start = dateStart, date_stop=date_stop, account_select = accountSelect, level_select = levelSelect);
             }, 1000);
 
             }
@@ -288,6 +294,7 @@ $(document).ready(function () {
 
         setTimeout(function () {
             $('section.loading').hide();
+            getCountryData(date_start = dateStart, date_stop=date_stop, account_select = accountSelect, level_select = levelSelect);
         }, 1000);
 
     });
@@ -337,6 +344,8 @@ $(document).ready(function () {
                 });
 
             };
+        
+            countryData = getCountryData(date_start = dateStart, date_stop=date_stop, account_select = accountSelect, level_select = levelSelect)
         }, 1500);
     });
 
@@ -351,6 +360,19 @@ $(document).ready(function () {
         id = e.target.value;
 
         var foundObject = data.find(item => item[key] === id);
+        var foundCountryObject = countryData.find(item => item[key] === id).series;
+
+        console.log(foundCountryObject);
+
+        foundCountryObject = foundCountryObject.reduce(function(accumulator, currentValue){
+            if (typeof accumulator[currentValue.country] === 'undefined') {
+                accumulator[currentValue.country] = 0;
+              }
+            accumulator[currentValue.country] += currentValue.total_spend;
+            return accumulator;
+        },{});
+
+        foundCountryObject = Object.entries(foundCountryObject).map(([key, value]) => [key, value]);
 
         var params = {
             "date_start": date_start,
@@ -373,6 +395,7 @@ $(document).ready(function () {
         $('#ctr').text(foundObject.ctr);
 
         drawLineChart(foundObject);
+        drawRegionsMap(foundCountryObject);
 
         setTimeout(function () {
             $('section.loading').hide();
