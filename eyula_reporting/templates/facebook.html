@@ -74,7 +74,7 @@
                 <a class="sidebar-toggle js-sidebar-toggle">
                     <i class="hamburger align-self-center"></i>
                 </a>
-                <div class="col-3 p-1">
+                <div class="col-2 p-1">
                     <form class="form-inline">
                         <div class="form-group">
                             <label for="account_id">Account Name</label>
@@ -85,7 +85,7 @@
                         </div>
                     </form>
                 </div>
-                <div class="col-3">
+                <div class="col-2">
                     <form class="form-inline">
                         <div class="form-group">
                             <label for="level">Level</label>
@@ -98,14 +98,32 @@
                         </div>
                     </form>
                 </div>
-                <div class="col-3">
+                <div class="col-2">
                     <form class="form-inline">
                         <div class="form-group1">
                             <label for="date">Date</label>
-                            <input type="text" name="daterange" value="01/01/2018 - 01/15/2018" />
+                            <input type="text" name="daterange"/>
                         </div>
                     </form>
                 </div>
+                <div class="col-2" style="margin-left: 35px;">
+                    <form class="form-inline">
+                        <div class="form-group">
+                            <label for="level">Action Type</label>
+                            <select class="form-select" id="actions">
+                                <option selected value="video_view">Video View</option>
+                                <option value="comment">Comment</option>
+                                <option value="link_click">Link Click</option>
+                                <option value="post_reaction">Post Reaction</option>
+                                <option value="landing_page_view">Landing Page View</option>
+                                <option value="post_engagement">Post Engagement</option>
+                                <option value="lead">Lead</option>
+                                <option value="page_engagement">Page Engagement</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+
 
 
                 <!-- Notifications dropdown -->
@@ -359,16 +377,30 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-12 col-md-8 col-xxl-8 d-flex">
+                        <div class="col-12 col-md-12 col-xxl-12 d-flex">
                             <div class="card flex-fill w-100">
 								<div class="card-header">
-									<h5 class="card-title mb-0">Total Spendings by Date</h5>
+                                    <select class="form-select w-25" style="display: inline;" id="x_axis">
+                                        <option selected value="total_spend">Total Spendings</option>
+                                        <option value="impressions">Impressions</option>
+                                        <option value="clicks">Clicks</option>
+                                        <option value="video_view">Video View</option>
+                                        <option value="comment">Comment</option>
+                                        <option value="link_click">Link Click</option>
+                                        <option value="post_reaction">Post Reaction</option>
+                                        <option value="landing_page_view">Landing Page View</option>
+                                        <option value="post_engagement">Post Engagement</option>
+                                        <option value="lead">Lead</option>
+                                        <option value="page_engagement">Page Engagement</option>
+                                    </select>
+                                    <h5 class="card-title mb-0 d-inline">by Date</h5>
 								</div>
 								<div class="card-body px-4">
 									<div id="line_chart" style="height:400px;"></div>
 								</div>
 							</div>
                         </div>
+                        <!--
                         <div class="col-12 col-md-6 col-xxl-4 d-flex">
                             <div class="card flex-fill w-100">
                                 <div class="card-header">
@@ -376,7 +408,7 @@
 								</div>
                             </div>
                         </div>
-
+                        -->
                     </div>
                 </div>
             </main>
@@ -390,10 +422,6 @@
     <script src="../static/adminkit/dist/js/app.js"></script>
     <script src="../static/js/login.js"></script>
     <script src="../static/js/meta.js"></script>
-    <script>
-
-    </script>
-
 
 </body>
 
