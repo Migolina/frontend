@@ -1,7 +1,15 @@
 $(document).ready(function () {
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+      // Redirect the user to the login page
+      window.location.href = 'http://localhost:5555/login';
+      return;
+      
     google.charts.load('current', { 'packages': ['corechart', 'line','geochart']});
 
     function drawLineChart(data,series_field = 'total_spend') {
+
         var dataTable = new google.visualization.DataTable();
         var words = series_field.split('_');
         var capitalizedWords = words.map(word => word.charAt(0).toUpperCase() + word.slice(1)); 
@@ -47,6 +55,7 @@ $(document).ready(function () {
 
 
     function getAccounts(user_id,level){
+
         $.ajax({
             url: 'http://127.0.0.1:5555/meta/user-levels',
             type: 'POST',
@@ -55,7 +64,9 @@ $(document).ready(function () {
                 'levelType': level
             }),
             headers: {
-                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiMSIsImV4cCI6MTY4MDI2MzA1NX0.p2FSz7jlSfkboO8mLfvhfz442C-0peQoGlk6nRx0lQU',
+
+                'Authorization': 'Bearer ' + token,
+
                 'Content-Type':'application/json'
             },
             dataType: 'json',
@@ -113,14 +124,19 @@ $(document).ready(function () {
                 "level": level
             };
         };
-        */
+
         
-        $.ajax({
+
+
+        
+        $.ajax({    
             url: "http://127.0.0.1:5555/meta/report",
             type: 'POST',
             data: JSON.stringify(params),
             headers: {
-                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiMSIsImV4cCI6MTY4MDI2MzA1NX0.p2FSz7jlSfkboO8mLfvhfz442C-0peQoGlk6nRx0lQU',
+
+                'Authorization': 'Bearer ' + token,
+
                 'Content-Type': 'application/json'
             },
             dataType: 'json',
@@ -183,7 +199,7 @@ $(document).ready(function () {
             type: 'POST',
             data: JSON.stringify(params),
             headers: {
-                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiMSIsImV4cCI6MTY4MDI2MzA1NX0.p2FSz7jlSfkboO8mLfvhfz442C-0peQoGlk6nRx0lQU',
+                'Authorization': 'Bearer ' + token,
                 'Content-Type': 'application/json'
             },
             dataType: 'json',
@@ -437,7 +453,9 @@ $(document).ready(function () {
             type: 'POST',
             data: JSON.stringify(params),
             headers: {
-                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiMSIsImV4cCI6MTY4MDI2MzA1NX0.p2FSz7jlSfkboO8mLfvhfz442C-0peQoGlk6nRx0lQU',
+
+                'Authorization': 'Bearer ' + token,
+
                 'Content-Type': 'application/json'
             },
             dataType: 'json',
@@ -465,6 +483,7 @@ $(document).ready(function () {
 
     });
 
+
     breakdownSelect.change(function(){
         $('section.loading').show();
         var accountId = accountSelect.val();
@@ -487,7 +506,7 @@ $(document).ready(function () {
             type: 'POST',
             data: JSON.stringify(params),
             headers: {
-                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiMSIsImV4cCI6MTY4MDI2MzA1NX0.p2FSz7jlSfkboO8mLfvhfz442C-0peQoGlk6nRx0lQU',
+                'Authorization': 'Bearer ' + token,
                 'Content-Type': 'application/json'
             },
             dataType: 'json',
@@ -539,6 +558,7 @@ $(document).ready(function () {
     });
 
 });
+
 
 
 

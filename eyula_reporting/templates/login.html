@@ -7,7 +7,7 @@
     <title>Document</title>
 
     <title>Sign In</title>
-    <link href="../static/adminkit/static/css/app.css" rel="stylesheet">
+    <link href="../static/adminkit/dist/css/app.css" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -22,7 +22,7 @@
 								<div class="m-sm-4">
 									<div class="text-center">
 									</div>
-									<form action="/login", method="POST">
+									<form id="login-form", action="/login", method="POST">
 										<div class="mb-3">
 											<label class="form-label">Email</label>
 											<input class="form-control form-control-lg" type="email" name="email"
@@ -36,6 +36,7 @@
 										<div class="text-center mt-3">
 											<button type="submit" class="btn btn-lg btn-primary">Sign in</button>
 										</div>
+										<div id="error-message" class="text-danger"></div>
 									</form>
 								</div>
 							</div>
@@ -46,8 +47,10 @@
 			</div>
 		</div>
 	</main>
-
     
+    <script src="../static/js/meta.js"></script>
+	<script src="../static/js/login.js"></script>
     <script src="../static/adminkit/dist/js/app.js"></script>
+
 </body>
 </html>
