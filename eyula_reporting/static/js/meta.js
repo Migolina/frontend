@@ -253,7 +253,7 @@ $(document).ready(function () {
 
     setTimeout(function(){
         getCountryData(date_start = dateStart, date_stop=date_stop, account_select = accountSelect, level_select = levelSelect);
-    },1000);
+    },1200);
 
     $(function () {
         $('input[name="daterange"]').daterangepicker({
