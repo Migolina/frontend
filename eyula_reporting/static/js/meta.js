@@ -52,7 +52,31 @@ $(document).ready(function () {
 
         chart.draw(dataTable, options);
 
-    }
+    };
+
+    
+    function drawMultSeries(pivot,field) {
+        var data = google.visualization.arrayToDataTable(pivot);
+
+        var words = field.split('_');
+        var capitalizedWords = words.map(word => word.charAt(0).toUpperCase() + word.slice(1)); 
+        var fieldText = capitalizedWords.join(' ');
+
+        var options = {
+        title: fieldText + ' by age and gender',
+        chartArea: {width: '60%'},
+        hAxis: {
+            title: fieldText,
+            minValue: 0.001
+        },
+        vAxis: {
+            title: 'Age'
+        }
+        };
+
+        var chart = new google.visualization.BarChart(document.getElementById('age_gender_div'));
+        chart.draw(data, options);
+    };
 
 
     function getAccounts(user_id,level){
@@ -227,13 +251,54 @@ $(document).ready(function () {
         return datas
     };
 
+    function getAgeGenderData(date_start, date_stop, account_select,level_select,series='total_spend'){
+        const level = level_select.val();
+        const account_id = account_select.val();
+
+        var datas = [];
+        var params = {
+            "date_start": date_start,
+            "date_stop": date_stop,
+            "account_id": account_id,
+            "series": [series],
+            "breakdowns": ['age','gender'],
+            "pivot": true,
+            "level": level
+        };
+
+        $.ajax({
+            url: "http://127.0.0.1:5555/meta/report",
+            type: 'POST',
+            data: JSON.stringify(params),
+            headers: {
+                'Authorization': 'Bearer ' + token,
+                'Content-Type': 'application/json'
+            },
+            dataType: 'json',
+            success: function(data){
+                firstObj = data[0].pivot_table;
+                data.forEach(element => {
+                    datas.push(element);
+                });
+
+                drawMultSeries(pivot = firstObj,field=series);
+            }
+        }).fail(function(err) {
+            console.log(err);
+        });
+
+        return datas;
+
+    }
+
     const userId = 1
     const accountSelect = $('#account_id');
     const levelSelect = $('#level');
     const actionsSelect = $('#actions');
     const xAxisSelect = $('#x_axis');
     const breakdownSelect = $('#breakdownSelect');
-    
+    const ageGenderSelect = $('#ageGenderSelect');
+
     const today = new Date('2023-03-01');
     const oneWeekAgo = new Date();
     oneWeekAgo.setTime(today.getTime() - (7 * 24 * 60 * 60 * 1000));
@@ -241,6 +306,7 @@ $(document).ready(function () {
     var dateStop = today.toISOString().substring(0, 10);
     var dateStart = oneWeekAgo.toISOString().substring(0, 10);
 
+    
     // default executed when page loads
     getData(user_id = userId,
         date_start = dateStart,
@@ -251,9 +317,16 @@ $(document).ready(function () {
         get_account = true
     );
 
+    
     setTimeout(function(){
         getCountryData(date_start = dateStart, date_stop=date_stop, account_select = accountSelect, level_select = levelSelect);
-    },1200);
+    },1500);
+    
+
+    setTimeout(function(){
+        getAgeGenderData(date_start = dateStart,date_stop = dateStop,account_select = accountSelect,level_select = levelSelect);
+    },2500);
+    
 
     $(function () {
         $('input[name="daterange"]').daterangepicker({
@@ -284,6 +357,10 @@ $(document).ready(function () {
                 getCountryData(date_start = dateStart, date_stop=date_stop, account_select = accountSelect, level_select = levelSelect);
             }, 1000);
 
+            setTimeout(function(){
+                getAgeGenderData(date_start = dateStart,date_stop = dateStop,account_select = accountSelect,level_select = levelSelect);
+            },2000);
+
             }
         );
     });
@@ -306,6 +383,11 @@ $(document).ready(function () {
             $('section.loading').hide();
             getCountryData(date_start = dateStart, date_stop=date_stop, account_select = accountSelect, level_select = levelSelect,series='impressions');
         }, 1000);
+
+        setTimeout(function(){
+            getAgeGenderData(date_start = dateStart,date_stop = dateStop,account_select = accountSelect,level_select = levelSelect);
+        },2000);
+
 
     });
 
@@ -355,7 +437,13 @@ $(document).ready(function () {
 
             };
         
-            countryData = getCountryData(date_start = dateStart, date_stop=date_stop, account_select = accountSelect, level_select = levelSelect)
+            countryData = getCountryData(date_start = dateStart, date_stop=date_stop, account_select = accountSelect, level_select = levelSelect);
+
+            setTimeout(function(){
+                ageGenderData = getAgeGenderData(date_start = dateStart,date_stop = dateStop,account_select = accountSelect,level_select = levelSelect);
+
+            },1700);
+            
         }, 1500);
     });
 
@@ -366,13 +454,16 @@ $(document).ready(function () {
         var level = levelSelect.val();
         var action_type = actionsSelect.val();
         var axis = xAxisSelect.val();
+        var ageGenderVal = ageGenderSelect.val();
         key = level + '_id';
         id = e.target.value;
 
         var foundObject = data.find(item => item[key] === id);
         var foundCountryObject = countryData.find(item => item[key] === id).series;
+        var foundAgeGenderObject = ageGenderData.find(item => item[key] === id).pivot_table;
 
-        console.log(foundCountryObject);
+        //console.log(foundCountryObject);
+        console.log(foundAgeGenderObject);
 
         foundCountryObject = foundCountryObject.reduce(function(accumulator, currentValue){
             if (typeof accumulator[currentValue.country] === 'undefined') {
@@ -406,6 +497,7 @@ $(document).ready(function () {
 
         drawLineChart(foundObject);
         drawRegionsMap(foundCountryObject);
+        drawMultSeries(foundAgeGenderObject,field=ageGenderVal);
 
         setTimeout(function () {
             $('section.loading').hide();
@@ -497,8 +589,6 @@ $(document).ready(function () {
             "level": level
         };
 
-        console.log(params);
-
         $.ajax({
             url: "http://127.0.0.1:5555/meta/report",
             type: 'POST',
@@ -544,6 +634,55 @@ $(document).ready(function () {
 
                 }
 
+            }
+        }).fail(function(err) {
+            console.log(err);
+        });
+
+        setTimeout(function () {
+            $('section.loading').hide();
+        }, 1000);
+
+    });
+
+    ageGenderSelect.change(function(){
+        $('section.loading').show();
+        var accountId = accountSelect.val();
+        var ageGenderVal = ageGenderSelect.val();
+        var level = levelSelect.val();
+
+        var params = {
+            "date_start": dateStart,
+            "date_stop": dateStop,
+            "account_id": accountId,
+            "series": [ageGenderVal],
+            "breakdowns": ['age','gender'],
+            'pivot':true,
+            "level": level
+        };
+
+        $.ajax({
+            url: "http://127.0.0.1:5555/meta/report",
+            type: 'POST',
+            data: JSON.stringify(params),
+            headers: {
+                'Authorization': 'Bearer ' + token,
+                'Content-Type': 'application/json'
+            },
+            dataType: 'json',
+            success: function(data){
+                if ($('#select-level').length){
+                    let key = level + '_id';
+                    let id = $('#select-level').val();
+
+                    var foundAgeGenderObject = data.find(item => item[key] === id).pivot_table;
+                    drawMultSeries(foundAgeGenderObject,field=ageGenderVal);
+
+
+                } else {
+                    var firstObj = data[0].pivot_table;
+                    drawMultSeries(firstObj,field=ageGenderVal);
+                }
             }
         }).fail(function(err) {
             console.log(err);
