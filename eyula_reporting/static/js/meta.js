@@ -1,13 +1,14 @@
 $(document).ready(function () {
     const token = localStorage.getItem('token');
 
+    google.charts.load('current', { 'packages': ['corechart', 'line','geochart']});
+
     if (!token) {
       // Redirect the user to the login page
       window.location.href = 'http://localhost:5000/login';
       return;
 
-    } 
-    google.charts.load('current', { 'packages': ['corechart', 'line','geochart']});
+    };
 
     function drawLineChart(data,series_field = 'total_spend') {
 
@@ -136,21 +137,7 @@ $(document).ready(function () {
             "kpis": ["cpc", "ctr", "cpa", "cr"],
             "level": level
         };
-        /*
-        if(account_id == "default") {
-            var params = {
-                "date_start":'2023-02-28',
-                "date_stop":'2023-03-03',
-                "account_id":"525510428828068",
-                "fields":["impressions","clicks","total_spend","video_view"],
-                "series":["total_spend"],
-                "actions":["video_view"],
-                "kpis":["cpc","ctr","cpa","cr"],
-                "level": level
-            };
-        };
-        */
-        
+
         $.ajax({    
             url: "http://127.0.0.1:5555/meta/report",
             type: 'POST',
@@ -305,19 +292,20 @@ $(document).ready(function () {
 
     var dateStop = today.toISOString().substring(0, 10);
     var dateStart = oneWeekAgo.toISOString().substring(0, 10);
-
     
     // default executed when page loads
-    getData(user_id = userId,
-        date_start = dateStart,
-        date_stop = dateStop,
-        account_select = accountSelect,
-        level_select = levelSelect,
-        actions_select = actionsSelect,
-        get_account = true
-    );
 
-    
+    setTimeout(function(){
+        getData(user_id = userId,
+            date_start = dateStart,
+            date_stop = dateStop,
+            account_select = accountSelect,
+            level_select = levelSelect,
+            actions_select = actionsSelect,
+            get_account = true
+        );
+    },1000);
+
     setTimeout(function(){
         getCountryData(date_start = dateStart, date_stop=date_stop, account_select = accountSelect, level_select = levelSelect);
     },1500);
