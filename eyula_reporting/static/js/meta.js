@@ -7,7 +7,6 @@ $(document).ready(function () {
       // Redirect the user to the login page
       window.location.href = 'http://localhost:5000/login';
       return;
-
     };
 
     function drawLineChart(data,series_field = 'total_spend') {
@@ -41,10 +40,10 @@ $(document).ready(function () {
         chart.draw(dataTable, options);
     };
 
-    function drawRegionsMap(data){
+    function drawRegionsMap(data,label){
         var dataTable = new google.visualization.DataTable();
         dataTable.addColumn('string','Country');
-        dataTable.addColumn('number','Population');
+        dataTable.addColumn('number',label);
         dataTable.addRows(data);
 
         var options = {};
@@ -81,7 +80,6 @@ $(document).ready(function () {
 
 
     function getAccounts(user_id,level){
-
         $.ajax({
             url: 'http://127.0.0.1:5555/meta/user-levels',
             type: 'POST',
@@ -143,9 +141,7 @@ $(document).ready(function () {
             type: 'POST',
             data: JSON.stringify(params),
             headers: {
-
                 'Authorization': 'Bearer ' + token,
-
                 'Content-Type': 'application/json'
             },
             dataType: 'json',
@@ -166,7 +162,6 @@ $(document).ready(function () {
 
                 }else {
                     firstObj = data[0];
-
                     data.forEach(element => {
                         datas.push(element);
                     });
@@ -228,7 +223,7 @@ $(document).ready(function () {
 
                 result = Object.entries(result).map(([key, value]) => [key, value]);
 
-                drawRegionsMap(data = result);
+                drawRegionsMap(data = result,label=series);
                 
             }
         }).fail(function(err){
@@ -276,7 +271,8 @@ $(document).ready(function () {
 
         return datas;
 
-    }
+    };
+
 
     const userId = 1
     const accountSelect = $('#account_id');
@@ -286,7 +282,7 @@ $(document).ready(function () {
     const breakdownSelect = $('#breakdownSelect');
     const ageGenderSelect = $('#ageGenderSelect');
 
-    const today = new Date('2023-03-01');
+    const today = new Date();
     const oneWeekAgo = new Date();
     oneWeekAgo.setTime(today.getTime() - (7 * 24 * 60 * 60 * 1000));
 
@@ -305,6 +301,7 @@ $(document).ready(function () {
             get_account = true
         );
     },1000);
+    
 
     setTimeout(function(){
         getCountryData(date_start = dateStart, date_stop=date_stop, account_select = accountSelect, level_select = levelSelect);
@@ -324,7 +321,7 @@ $(document).ready(function () {
             showDropdowns: false,
             locale: {
                 format: 'DD/MM/YYYY'
-            } 
+            }
         },
             function (start, end, label) {
                 $('section.loading').show();
@@ -339,15 +336,15 @@ $(document).ready(function () {
                     actions_select = actionsSelect,
                 );
 
-            
-            setTimeout(function () {
-                $('section.loading').hide();
-                getCountryData(date_start = dateStart, date_stop=date_stop, account_select = accountSelect, level_select = levelSelect);
-            }, 1000);
 
-            setTimeout(function(){
-                getAgeGenderData(date_start = dateStart,date_stop = dateStop,account_select = accountSelect,level_select = levelSelect);
-            },2000);
+                setTimeout(function () {
+                    $('section.loading').hide();
+                    getCountryData(date_start = dateStart, date_stop = date_stop, account_select = accountSelect, level_select = levelSelect);
+                }, 1000);
+
+                setTimeout(function () {
+                    getAgeGenderData(date_start = dateStart, date_stop = dateStop, account_select = accountSelect, level_select = levelSelect);
+                }, 2000);
 
             }
         );
@@ -603,7 +600,7 @@ $(document).ready(function () {
             
                     foundCountryObject = Object.entries(foundCountryObject).map(([key, value]) => [key, value]);
 
-                    drawRegionsMap(data = foundCountryObject);
+                    drawRegionsMap(data = foundCountryObject,label=breakdownVal);
 
                 }else {
                     let firstObj = data[0].series;
