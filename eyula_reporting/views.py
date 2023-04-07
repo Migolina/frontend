@@ -20,9 +20,9 @@ def login_required(func):
     return decorated_function
 
 
-@app.route('/',methods=['GET'])
+@app.route('/settings',methods=['GET'])
 def home():
-    return render_template('index.html')
+    return render_template('settings.html')
 
 @app.route('/login',methods=['GET','POST'])
 def login():

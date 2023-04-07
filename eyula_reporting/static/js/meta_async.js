@@ -256,8 +256,6 @@ $(document).ready(function () {
             "level": levelSelect.val()
         };
 
-        console.log(params);
-
         var result = fetch('http://127.0.0.1:5555/meta/report',{
             method: 'POST',
             headers: {
