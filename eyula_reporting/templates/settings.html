@@ -15,6 +15,9 @@
         <!--Load the AJAX API-->
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 </head>
 
 <body>
@@ -54,8 +57,8 @@
 
 							<a class="nav-link dropdown-toggle d-none d-sm-inline-block" href="#"
 								data-bs-toggle="dropdown">
-								<img src="../static/adminkit/static/img/avatars/avatar-2.jpg" class="avatar img-fluid rounded me-1"
-									alt="Charles Hall" /> <span class="text-dark">Charles Hall</span>
+								<img src="../static/adminkit/static/img/avatars/avatar-fikri.jpg" class="avatar img-fluid rounded me-1"
+									alt="Charles Hall" /> <span class="text-dark"></span>
 							</a>
 							<div class="dropdown-menu dropdown-menu-end">
 								<a class="dropdown-item" href="/settings"><i class="align-middle me-1"
@@ -67,12 +70,31 @@
                     </ul>
                 </div>
             </nav>
+
+            <main class="content">
+                <div class="container-fluid p-0">
+                    <h1 class="h4 mb-3"><strong>Register Facebook Ad Account</strong></h1>
+                    <form>
+                        <div class="form-group">
+                            <label for="fbAccountId">Facebook Account ID</label>
+                            <input type="text" name="facebook_account_id" id="fbAccountId" class="form-control w-50">
+                        </div>
+                        <div class="form-group">
+                            <label for="dateRange">Date Range</label>
+                            <input type="text" name="daterange" id="dateRange" class="form-control w-50">
+                        </div>
+                        <button class="btn btn-primary mt-3" id="registerBtn">Register</button>
+                    </form>
+                </div>
+            </main>
+
         </div>
     </div>
 
 
     <!-- AdminKit JS file -->
     <script src="../static/adminkit/dist/js/app.js"></script>
+    <script src="../static/js/settings.js"></script>
 </body>
 
 </html>
