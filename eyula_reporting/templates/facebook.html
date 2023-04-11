@@ -18,6 +18,8 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+    <script src="https://kit.fontawesome.com/bc6f9192d6.js" crossorigin="anonymous"></script>
+    
     <!--Load the AJAX API-->
     
 </head>
@@ -118,7 +120,7 @@
 
 							<div class="dropdown-menu dropdown-menu-end">
 								<a class="dropdown-item" href="/settings"><i class="align-middle me-1"
-										data-feather="settings"></i> Settings & Privacy</a>
+										data-feather="settings"></i>Register Account</a>
 								<div class="dropdown-divider"></div>
 								<a class="dropdown-item" href="#" id="logout">Log out</a>
 							</div>
@@ -157,7 +159,7 @@
                                                         </div>
                                                         <div class="col-auto">
                                                             <div class="stat text-primary">
-                                                                <i class="align-middle" data-feather="truck"></i>
+                                                                <i class="fa-regular fa-eye"></i>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -179,7 +181,7 @@
 
                                                         <div class="col-auto">
                                                             <div class="stat text-primary">
-                                                                <i class="align-middle" data-feather="users"></i>
+                                                                <i class="fa-solid fa-arrow-pointer"></i>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -200,10 +202,9 @@
                                                         <div class="col mt-0">
                                                             <h5 class="card-title">Spendings</h5>
                                                         </div>
-                
                                                         <div class="col-auto">
-                                                            <div class="stat text-primary">
-                                                                <i class="align-middle" data-feather="dollar-sign"></i>
+                                                            <div class="stat text-primary" id='currencyIcon'>
+
                                                             </div>
                                                         </div>
                                                     </div>
@@ -224,7 +225,7 @@
                                                         </div>
                                                         <div class="col-auto">
                                                             <div class="stat text-primary">
-                                                                <i class="align-middle" data-feather="shopping-cart"></i>
+                                                                <i class="fa-solid fa-cart-shopping"></i>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -255,7 +256,7 @@
 
                                                         <div class="col-auto">
                                                             <div class="stat text-primary">
-                                                                <i class="align-middle" data-feather="truck"></i>
+                                                                <i class="fa-solid fa-arrow-pointer"></i>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -277,7 +278,7 @@
 
                                                         <div class="col-auto">
                                                             <div class="stat text-primary">
-                                                                <i class="align-middle" data-feather="users"></i>
+                                                                <i class="fa-solid fa-user-group"></i>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -301,7 +302,7 @@
                 
                                                         <div class="col-auto">
                                                             <div class="stat text-primary">
-                                                                <i class="align-middle" data-feather="dollar-sign"></i>
+                                                                <i class="fa-solid fa-cart-shopping"></i>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -323,7 +324,7 @@
                 
                                                         <div class="col-auto">
                                                             <div class="stat text-primary">
-                                                                <i class="align-middle" data-feather="shopping-cart"></i>
+                                                                <i class="fa-solid fa-star"></i>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -437,6 +438,8 @@
     <!-- AdminKit JS file -->
     <script src="../static/adminkit/dist/js/app.js"></script>
     <script src="../static/js/meta.js"></script>
+    
+    
 
 </body>
 

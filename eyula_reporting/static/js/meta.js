@@ -39,18 +39,16 @@ $(document).ready(function () {
                 $('section.loading').show();
                 var startISO = start.toISOString().substring(0, 10);
                 var endISO = end.toISOString().substring(0, 10);
-                $('input[name="daterange"]').val(startISO + ' - ' + endISO)
+                $('input[name="daterange"]').val(startISO + ' - ' + endISO);
 
                 //get insights
                 getOnLoadDataResponse = await getonLoadData();
                 getOnLoadDataJson = await getOnLoadDataResponse.json();
 
-                console.log(getOnLoadDataJson);
-
                 //get first object and write to document
                 firstObj = getOnLoadDataJson[0];
                 $('#impressions').text(firstObj.impressions_sum);
-                $('#spendings').text(firstObj.total_spend_sum);
+                $('#spendings').text(totalSpendSufirstObj.total_spend_sum);
                 $('#clicks').text(firstObj.clicks_sum);
                 $('#conversions').text(firstObj[actionsSelect.val() + '_sum']);
                 $('#cpc').text(firstObj.cpc);
@@ -79,6 +77,20 @@ $(document).ready(function () {
             }
         )
     });
+
+    function currencyIcon(currency){
+        if(currency == 'TRY'){
+            var iconElement = `<i class="fa-solid fa-turkish-lira-sign"></i>`
+        } else if (currency == 'USD') {
+            var iconElement = `<i class="fa-solid fa-dollar-sign"></i>`
+        } else if (currency == 'EUR'){
+            var iconElement = `<i class="fa-solid fa-euro-sign"></i>`
+        } else {
+            var iconElement = `<i class="fa-solid fa-money-bill"></i>`
+        }
+
+        return iconElement
+    }
 
     function drawLineChart(data,series_field = 'total_spend') {
         var dataTable = new google.visualization.DataTable();
@@ -286,8 +298,6 @@ $(document).ready(function () {
         getAccountResponse = await getAccounts();
         getAccountJson = await getAccountResponse.json();
 
-        console.log(getAccountJson);
-
         getAccountJson.forEach(element => {
             var option = $('<option>');
             let levelId = Object.values(element)[0];
@@ -304,6 +314,12 @@ $(document).ready(function () {
 
         //get first object and write to document
         firstObj = getOnLoadDataJson[0];
+        var accountCurrency = firstObj.account_currency
+        currencyIconElement =  currencyIcon(accountCurrency);
+
+        //set currency icon 
+        $('#currencyIcon').append(currencyIconElement);
+
         $('#impressions').text(firstObj.impressions_sum);
         $('#spendings').text(firstObj.total_spend_sum);
         $('#clicks').text(firstObj.clicks_sum);
@@ -343,6 +359,14 @@ $(document).ready(function () {
 
         //get first object and write to document
         firstObj = getOnLoadDataJson[0];
+        var accountCurrency = firstObj.account_currency
+        currencyIconElement =  currencyIcon(accountCurrency);
+        console.log(currencyIconElement);
+
+        //set currency icon
+        $('#currencyIcon').empty();
+        $('#currencyIcon').append(currencyIconElement);
+
         $('#impressions').text(firstObj.impressions_sum);
         $('#spendings').text(firstObj.total_spend_sum);
         $('#clicks').text(firstObj.clicks_sum);
@@ -412,6 +436,7 @@ $(document).ready(function () {
         };
 
         firstObj = getOnLoadDataJson[0];
+
         $('#impressions').text(firstObj.impressions_sum);
         $('#spendings').text(firstObj.total_spend_sum);
         $('#clicks').text(firstObj.clicks_sum);
@@ -452,6 +477,7 @@ $(document).ready(function () {
         getOnLoadDataJson = await getOnLoadDataResponse.json();
 
         var foundOnLoadDataObject = getOnLoadDataJson.find(item => item[key] === id);
+        
         $('#impressions').text(foundOnLoadDataObject.impressions_sum);
         $('#spendings').text(foundOnLoadDataObject.total_spend_sum);
         $('#clicks').text(foundOnLoadDataObject.clicks_sum);

@@ -32,7 +32,6 @@ $(document).ready(function(){
         var dateStart = $('input[name="daterange"]').val().split(' - ')[0];
         var dateStop = $('input[name="daterange"]').val().split(' - ')[1];
 
-        
         try {
             $('section.loading').show();
             const response = await fetch('http://127.0.0.1:5555/meta/register',{
@@ -46,6 +45,7 @@ $(document).ready(function(){
 
             const result = await response.json();
             $('section.loading').hide();
+
             console.log(result);
 
         } catch (error){
