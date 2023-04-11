@@ -47,14 +47,27 @@ $(document).ready(function () {
 
                 //get first object and write to document
                 firstObj = getOnLoadDataJson[0];
+                var accountCurrency = firstObj.account_currency
+                currencyIconElement =  currencyIcon(accountCurrency);
+        
+                //set currency icon
+                $('#currencyIcon').empty();
+                $('#currencyIcon').append(currencyIconElement);
+
+                $('#cpcCurrencyAccount').empty();
+                $('#cpcCurrencyAccount').append(currencyIconElement);
+
+                $('#cpaCurrencyIcon').empty();
+                $('#cpaCurrencyIcon').append(currencyIconElement);
+
                 $('#impressions').text(firstObj.impressions_sum);
-                $('#spendings').text(totalSpendSufirstObj.total_spend_sum);
+                $('#spendings').text(firstObj.total_spend_sum);
                 $('#clicks').text(firstObj.clicks_sum);
                 $('#conversions').text(firstObj[actionsSelect.val() + '_sum']);
                 $('#cpc').text(firstObj.cpc);
                 $('#cpa').text(firstObj['cpa_' + actionsSelect.val()]);
-                $('#cr').text(firstObj['cr_' + actionsSelect.val()]);
-                $('#ctr').text(firstObj.ctr);
+                $('#cr').text('%' + firstObj['cr_' + actionsSelect.val()]);
+                $('#ctr').text('%' + firstObj.ctr);
 
                 drawLineChart(firstObj,timeSeriesSelect.val());
 
@@ -318,7 +331,9 @@ $(document).ready(function () {
         currencyIconElement =  currencyIcon(accountCurrency);
 
         //set currency icon 
-        $('#currencyIcon').append(currencyIconElement);
+        $('#spendingsCurrencyIcon').append(currencyIconElement);
+        $('#cpcCurrencyAccount').append(currencyIconElement);
+        $('#cpaCurrencyIcon').append(currencyIconElement);
 
         $('#impressions').text(firstObj.impressions_sum);
         $('#spendings').text(firstObj.total_spend_sum);
@@ -326,8 +341,8 @@ $(document).ready(function () {
         $('#conversions').text(firstObj[actionsSelect.val() + '_sum']);
         $('#cpc').text(firstObj.cpc);
         $('#cpa').text(firstObj['cpa_' + actionsSelect.val()]);
-        $('#cr').text(firstObj['cr_' + actionsSelect.val()]);
-        $('#ctr').text(firstObj.ctr);
+        $('#cr').text('%' + firstObj['cr_' + actionsSelect.val()]);
+        $('#ctr').text('%' + firstObj.ctr);
 
         drawLineChart(firstObj,timeSeriesSelect.val());
 
@@ -361,11 +376,16 @@ $(document).ready(function () {
         firstObj = getOnLoadDataJson[0];
         var accountCurrency = firstObj.account_currency
         currencyIconElement =  currencyIcon(accountCurrency);
-        console.log(currencyIconElement);
 
         //set currency icon
-        $('#currencyIcon').empty();
-        $('#currencyIcon').append(currencyIconElement);
+        $('#spendingsCurrencyIcon').empty();
+        $('#spendingsCurrencyIcon').append(currencyIconElement);
+
+        $('#cpcCurrencyAccount').empty();
+        $('#cpcCurrencyAccount').append(currencyIconElement);
+
+        $('#cpaCurrencyIcon').empty();
+        $('#cpaCurrencyIcon').append(currencyIconElement);
 
         $('#impressions').text(firstObj.impressions_sum);
         $('#spendings').text(firstObj.total_spend_sum);
@@ -373,8 +393,8 @@ $(document).ready(function () {
         $('#conversions').text(firstObj[actionsSelect.val() + '_sum']);
         $('#cpc').text(firstObj.cpc);
         $('#cpa').text(firstObj['cpa_' + actionsSelect.val()]);
-        $('#cr').text(firstObj['cr_' + actionsSelect.val()]);
-        $('#ctr').text(firstObj.ctr);
+        $('#cr').text('%' + firstObj['cr_' + actionsSelect.val()]);
+        $('#ctr').text('%' + firstObj.ctr);
 
         // draw time series chart
         drawLineChart(firstObj,timeSeriesSelect.val());
@@ -436,6 +456,18 @@ $(document).ready(function () {
         };
 
         firstObj = getOnLoadDataJson[0];
+        var accountCurrency = firstObj.account_currency
+        currencyIconElement =  currencyIcon(accountCurrency);
+
+        //set currency icon
+        $('#spendingsCurrencyIcon').empty();
+        $('#spendingsCurrencyIcon').append(currencyIconElement);
+
+        $('#cpcCurrencyAccount').empty();
+        $('#cpcCurrencyAccount').append(currencyIconElement);
+
+        $('#cpaCurrencyIcon').empty();
+        $('#cpaCurrencyIcon').append(currencyIconElement);
 
         $('#impressions').text(firstObj.impressions_sum);
         $('#spendings').text(firstObj.total_spend_sum);
@@ -443,8 +475,8 @@ $(document).ready(function () {
         $('#conversions').text(firstObj[actionsSelect.val() + '_sum']);
         $('#cpc').text(firstObj.cpc);
         $('#cpa').text(firstObj['cpa_' + actionsSelect.val()]);
-        $('#cr').text(firstObj['cr_' + actionsSelect.val()]);
-        $('#ctr').text(firstObj.ctr);
+        $('#cr').text('%' + firstObj['cr_' + actionsSelect.val()]);
+        $('#ctr').text('%' + firstObj.ctr);
         drawLineChart(firstObj,timeSeriesSelect.val());
 
         // draw map chart
@@ -477,6 +509,19 @@ $(document).ready(function () {
         getOnLoadDataJson = await getOnLoadDataResponse.json();
 
         var foundOnLoadDataObject = getOnLoadDataJson.find(item => item[key] === id);
+
+        var accountCurrency = foundOnLoadDataObject.account_currency
+        currencyIconElement =  currencyIcon(accountCurrency);
+
+        //set currency icon
+        $('#spendingsCurrencyIcon').empty();
+        $('#spendingsCurrencyIcon').append(currencyIconElement);
+
+        $('#cpcCurrencyAccount').empty();
+        $('#cpcCurrencyAccount').append(currencyIconElement);
+
+        $('#cpaCurrencyIcon').empty();
+        $('#cpaCurrencyIcon').append(currencyIconElement);
         
         $('#impressions').text(foundOnLoadDataObject.impressions_sum);
         $('#spendings').text(foundOnLoadDataObject.total_spend_sum);
@@ -484,8 +529,8 @@ $(document).ready(function () {
         $('#conversions').text(foundOnLoadDataObject[actionsSelect.val() + '_sum']);
         $('#cpc').text(foundOnLoadDataObject.cpc);
         $('#cpa').text(foundOnLoadDataObject['cpa_' + actionsSelect.val()]);
-        $('#cr').text(foundOnLoadDataObject['cr_' + actionsSelect.val()]);
-        $('#ctr').text(foundOnLoadDataObject.ctr);
+        $('#cr').text('%' + foundOnLoadDataObject['cr_' + actionsSelect.val()]);
+        $('#ctr').text('%' + foundOnLoadDataObject.ctr);
 
         drawLineChart(foundOnLoadDataObject,timeSeriesSelect.val());
 
@@ -516,14 +561,29 @@ $(document).ready(function () {
 
         //get first object and write to document
         firstObj = getOnLoadDataJson[0];
+        var accountCurrency = firstObj.account_currency
+        currencyIconElement =  currencyIcon(accountCurrency);
+
+        //set currency icon
+        $('#spendingsCurrencyIcon').empty();
+        $('#spendingsCurrencyIcon').append(currencyIconElement);
+
+        $('#cpcCurrencyAccount').empty();
+        $('#cpcCurrencyAccount').append(currencyIconElement);
+
+        $('#cpaCurrencyIcon').empty();
+        $('#cpaCurrencyIcon').append(currencyIconElement);
+
+        
+
         $('#impressions').text(firstObj.impressions_sum);
         $('#spendings').text(firstObj.total_spend_sum);
         $('#clicks').text(firstObj.clicks_sum);
         $('#conversions').text(firstObj[actionsSelect.val() + '_sum']);
         $('#cpc').text(firstObj.cpc);
         $('#cpa').text(firstObj['cpa_' + actionsSelect.val()]);
-        $('#cr').text(firstObj['cr_' + actionsSelect.val()]);
-        $('#ctr').text(firstObj.ctr);
+        $('#cr').text('%' + firstObj['cr_' + actionsSelect.val()]);
+        $('#ctr').text('%' + firstObj.ctr);
 
 
         $('section.loading').hide();
