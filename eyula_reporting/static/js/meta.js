@@ -45,48 +45,56 @@ $(document).ready(function () {
                 getOnLoadDataResponse = await getonLoadData();
                 getOnLoadDataJson = await getOnLoadDataResponse.json();
 
-                //get first object and write to document
-                firstObj = getOnLoadDataJson[0];
-                var accountCurrency = firstObj.account_currency
-                currencyIconElement =  currencyIcon(accountCurrency);
-        
-                //set currency icon
-                $('#currencyIcon').empty();
-                $('#currencyIcon').append(currencyIconElement);
+                if (getOnLoadDataJson == 0){
 
-                $('#cpcCurrencyAccount').empty();
-                $('#cpcCurrencyAccount').append(currencyIconElement);
+                    $('section.loading').hide();      
+                    alert('No data available in given dates');
 
-                $('#cpaCurrencyIcon').empty();
-                $('#cpaCurrencyIcon').append(currencyIconElement);
+                } else {
+                    //get first object and write to document
+                    firstObj = getOnLoadDataJson[0];
+                    console.log(firstObj);
+                    var accountCurrency = firstObj.account_currency
+                    currencyIconElement =  currencyIcon(accountCurrency);
+            
+                    //set currency icon
+                    $('#currencyIcon').empty();
+                    $('#currencyIcon').append(currencyIconElement);
 
-                $('#impressions').text(firstObj.impressions_sum);
-                $('#spendings').text(firstObj.total_spend_sum);
-                $('#clicks').text(firstObj.clicks_sum);
-                $('#conversions').text(firstObj[actionsSelect.val() + '_sum']);
-                $('#cpc').text(firstObj.cpc);
-                $('#cpa').text(firstObj['cpa_' + actionsSelect.val()]);
-                $('#cr').text('%' + firstObj['cr_' + actionsSelect.val()]);
-                $('#ctr').text('%' + firstObj.ctr);
+                    $('#cpcCurrencyAccount').empty();
+                    $('#cpcCurrencyAccount').append(currencyIconElement);
 
-                drawLineChart(firstObj,timeSeriesSelect.val());
+                    $('#cpaCurrencyIcon').empty();
+                    $('#cpaCurrencyIcon').append(currencyIconElement);
 
-                // draw map chart
-                getCountryResponse = await getCountryData();
-                getCountryJson = await getCountryResponse.json();
-                firstObj = getCountryJson[0].series;
+                    $('#impressions').text(firstObj.impressions_sum);
+                    $('#spendings').text(firstObj.total_spend_sum);
+                    $('#clicks').text(firstObj.clicks_sum);
+                    $('#conversions').text(firstObj[actionsSelect.val() + '_sum']);
+                    $('#cpc').text(firstObj.cpc);
+                    $('#cpa').text(firstObj['cpa_' + actionsSelect.val()]);
+                    $('#cr').text('%' + firstObj['cr_' + actionsSelect.val()]);
+                    $('#ctr').text('%' + firstObj.ctr);
 
-                drawRegionsMap(firstObj,countrySelect.val());
+                    drawLineChart(firstObj,timeSeriesSelect.val());
 
-                // draw age gender distribution
-                getAgeGenderResponse = await getAgeGenderData();
-                getAgeGenderDataJson = await getAgeGenderResponse.json();
+                    // draw map chart
+                    getCountryResponse = await getCountryData();
+                    getCountryJson = await getCountryResponse.json();
+                    firstObj = getCountryJson[0].series;
 
-                firstObj = getAgeGenderDataJson[0].pivot_table;
+                    drawRegionsMap(firstObj,countrySelect.val());
 
-                drawMultSeries(firstObj,ageGenderSelect.val());
+                    // draw age gender distribution
+                    getAgeGenderResponse = await getAgeGenderData();
+                    getAgeGenderDataJson = await getAgeGenderResponse.json();
 
-                $('section.loading').hide();
+                    firstObj = getAgeGenderDataJson[0].pivot_table;
+
+                    drawMultSeries(firstObj,ageGenderSelect.val());
+
+                    $('section.loading').hide();
+                }
             }
         )
     });
