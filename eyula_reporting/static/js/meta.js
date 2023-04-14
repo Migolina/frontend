@@ -561,9 +561,6 @@ $(document).ready(function () {
     });
 
     actionsSelect.change(async function(){
-        var loading = $('section.loading');
-        console.log(loading);
-
         $('section.loading').show();
 
         //get insights
