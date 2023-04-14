@@ -17,7 +17,7 @@ $(document).ready(function () {
     const countrySelect = $('#countrySelect');
     const ageGenderSelect = $('#ageGenderSelect');
 
-    const today = new Date();
+    const today = new Date('2023-04-06');
     const oneWeekAgo = new Date();
     oneWeekAgo.setTime(today.getTime() - (7 * 24 * 60 * 60 * 1000));
 
@@ -561,6 +561,9 @@ $(document).ready(function () {
     });
 
     actionsSelect.change(async function(){
+        var loading = $('section.loading');
+        console.log(loading);
+
         $('section.loading').show();
 
         //get insights
