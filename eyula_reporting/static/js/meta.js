@@ -1,4 +1,5 @@
 $(document).ready(function () {
+    var currentDataObject = null;
     const token = localStorage.getItem('token');
     const firstName = localStorage.getItem('first_name');
     const lastName = localStorage.getItem('last_name');
@@ -91,13 +92,42 @@ $(document).ready(function () {
 
                     firstObj = getAgeGenderDataJson[0].pivot_table;
 
-                    drawMultSeries(firstObj,ageGenderSelect.val());
+                    createChart(firstObj);
 
                     $('section.loading').hide();
                 }
             }
         )
     });
+
+    
+    async function createChart(currentDataObject) {
+        console.log('createChart called');
+        if (!currentDataObject) {
+            $('section.loading').show();
+            var level = levelSelect.val();
+            getAgeGenderDataResponse = await getAgeGenderData();
+            getAgeGenderDataJson = await getAgeGenderDataResponse.json();
+    
+            if ($('#select-level').length) {
+                let key = level + '_id';
+                let id = $('#select-level').val();
+                currentDataObject = getAgeGenderDataJson.find(item => item[key] === id).pivot_table;
+            } else {
+                currentDataObject = getAgeGenderDataJson[0].pivot_table;
+            };
+    
+            $('section.loading').hide();
+        }
+
+        var dataType = $("#ageGenderSelect").val();
+        var chartType = $("#chartTypeSelect").val() ? $("#chartTypeSelect").val() : "pie";
+        console.log('dataType:', dataType, 'chartType:', chartType);
+    
+        if (dataType && chartType) {
+            drawMultSeries(currentDataObject, dataType, chartType);
+        }
+    }
 
     function currencyIcon(currency){
         if(currency == 'TRY'){
@@ -168,45 +198,55 @@ $(document).ready(function () {
     };
 
     
-    function drawMultSeries(pivot,field) {
-        if(pivot.length != 1){
+    function drawMultSeries(pivot, field, chartType) {
+        if (pivot.length != 1) {
             var data = google.visualization.arrayToDataTable(pivot);
-
+    
             var words = field.split('_');
-            var capitalizedWords = words.map(word => word.charAt(0).toUpperCase() + word.slice(1)); 
+            var capitalizedWords = words.map(word => word.charAt(0).toUpperCase() + word.slice(1));
             var fieldText = capitalizedWords.join(' ');
     
             var options = {
-            title: fieldText + ' by age and gender',
-            chartArea: {width: '60%'},
-            hAxis: {
-                title: fieldText,
-                minValue: 0.001
-            },
-            vAxis: {
-                title: 'Age'
-            }
+                title: fieldText + ' by age and gender',
+                chartArea: { width: '60%' },
+                hAxis: {
+                    title: fieldText,
+                    minValue: 0.001
+                },
+                vAxis: {
+                    title: 'Age'
+                },
+                is3D: true
             };
     
-            var chart = new google.visualization.BarChart(document.getElementById('age_gender_div'));
+            var chart;
+    
+            if (chartType === 'bar') {
+                chart = new google.visualization.BarChart(document.getElementById('age_gender_div'));
+            } else if (chartType === 'pie') {
+                chart = new google.visualization.PieChart(document.getElementById('age_gender_div'));
+            } else {
+                console.error('Invalid chart type:', chartType);
+                return;
+            }
+    
             chart.draw(data, options);
         } else {
-        var data = [
+            var data = [
                 ['total_spend', 'male', 'female'],
                 ['18-24', 0, 0],
                 ['25-34', 0, 0],
+                ['35-44', 0, 0],
                 ['45-54', 0, 0],
                 ['55-64', 0, 0]
             ]
-
-        
-        data = google.visualization.arrayToDataTable(data);
-
-        var chart = new google.visualization.BarChart(document.getElementById('age_gender_div'));
-        chart.draw(data, options);    
-        };
-
-    };
+    
+            data = google.visualization.arrayToDataTable(data);
+    
+            var chart = new google.visualization.PieChart(document.getElementById('age_gender_div'));
+            chart.draw(data, options);
+        }
+    }
 
     function getAccounts() {
         var result = fetch("http://127.0.0.1:5555/meta/user-levels",
@@ -304,7 +344,6 @@ $(document).ready(function () {
             body: JSON.stringify(params)
 
         });
-
         return result
 
     };
@@ -367,7 +406,7 @@ $(document).ready(function () {
 
         firstObj = getAgeGenderDataJson[0].pivot_table;
 
-        drawMultSeries(firstObj,ageGenderSelect.val());
+        createChart(firstObj);
 
         $('section.loading').hide();
 
@@ -421,7 +460,7 @@ $(document).ready(function () {
 
         firstObj = getAgeGenderDataJson[0].pivot_table;
 
-        drawMultSeries(firstObj,ageGenderSelect.val());
+        createChart(firstObj);
 
         $('section.loading').hide();
     });
@@ -500,7 +539,7 @@ $(document).ready(function () {
         
         firstObj = getAgeGenderDataJson[0].pivot_table;
         
-        drawMultSeries(firstObj,ageGenderSelect.val());
+        createChart(firstObj);
 
         $('section.loading').hide();
 
@@ -554,7 +593,7 @@ $(document).ready(function () {
         getAgeGenderDataJson = await getAgeGenderResponse.json(); 
         var foundAgeGenderObject = getAgeGenderDataJson.find(item => item[key] === id).pivot_table;
 
-        drawMultSeries(foundAgeGenderObject,ageGenderSelect.val());
+        createChart(foundAgeGenderObject);
 
 
         $('section.loading').hide();
@@ -647,6 +686,7 @@ $(document).ready(function () {
     });
 
     ageGenderSelect.change(async function(){
+        console.log('ageGenderSelect changed');
         $('section.loading').show();
         var level = levelSelect.val();
         getAgeGenderDataResponse = await getAgeGenderData();
@@ -655,17 +695,20 @@ $(document).ready(function () {
         if($('#select-level').length){
             let key = level + '_id';
             let id = $('#select-level').val();
-            
-            var foundAgeGenderObject = getAgeGenderDataJson.find(item => item[key] === id).pivot_table;
-            drawMultSeries(foundAgeGenderObject,ageGenderSelect.val());
-
+            var currentDataObject = getAgeGenderDataJson.find(item => item[key] === id).pivot_table;
+            createChart(currentDataObject);
         } else {
-            var firstObj = getAgeGenderDataJson[0].pivot_table;
-            drawMultSeries(firstObj,ageGenderSelect.val());
+            var currentDataObject = getAgeGenderDataJson[0].pivot_table;
+            createChart(currentDataObject);
         };
-
+        
         $('section.loading').hide();
 
+    });
+    $("#chartTypeSelect").change(function () {
+        console.log("chartTypeSelect changed");
+        createChart();
+    
     });
 
 
@@ -673,7 +716,6 @@ $(document).ready(function () {
         localStorage.removeItem('token');
         window.location.href = 'http://localhost:5000/login';
     });
-
 
     onLoadInsights();
 

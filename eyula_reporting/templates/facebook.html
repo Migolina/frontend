@@ -11,6 +11,10 @@
     <title>AdminKit</title>
 
     <!-- AdminKit CSS file -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
     <link href="../static/css/meta.css" rel="stylesheet">
     <link href="../static/adminkit/dist/css/app.css" rel="stylesheet">
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
@@ -415,6 +419,11 @@
                                         <option value="post_engagement">Post Engagement</option>
                                         <option value="lead">Lead</option>
                                         <option value="page_engagement">Page Engagement</option>
+                                    </select>
+                                    <select class="form-select w-25" style="display: inline;" id="chartTypeSelect">
+                                        <option value="pie">Pie chart</option>
+                                        <option value="bar">Bar chart</option>
+                                        
                                     </select>
 									<h5 class="card-title mb-0 d-inline">by Age and Gender</h5>
 								</div>
