@@ -2,7 +2,7 @@ from flask import render_template,request,redirect, url_for
 from functools import wraps
 import requests
 
-from eyula_reporting import app
+from reporting import app
 
 def login_required(func):
     @wraps(func)
